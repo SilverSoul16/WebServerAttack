@@ -1,47 +1,28 @@
-use std::io::prelude::*;
-use std::net::TcpListener;
-use std::net::TcpStream;
-use std::fs;
+mod preforked;
 
 fn main() {
-    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+    //while true {
+        let mut input = String::new();
+        println!("Enter command (write exit to end): ");
+        let mut input_bytes = std::io::stdin().read_line(&mut input).unwrap();
+        if input.starts_with("prethread-WebServer"){
+            // code for prethread
+            // preforked-WebServer -n cantidad -w http-root -p port
 
-    for stream in listener.incoming() {
-        let stream = stream.unwrap();
-
-        handle_connection(stream);
-    }
-}
-
-fn handle_connection(mut stream: TcpStream) {
-    let mut buffer = [0; 1024];
-    stream.read(&mut buffer).unwrap();
-
-    let get = b"GET / HTTP/1.1\r\n";
-
-    if buffer.starts_with(get) {
-        let contents = fs::read_to_string("hi.html").unwrap();
-
-        let response = format!(
-            "HTTP/1.1 200 OK\r\nContent-Length: {}\r\n\r\n{}",
-            contents.len(),
-            contents
-        );
-
-        stream.write(response.as_bytes()).unwrap();
-        stream.flush().unwrap();
-    } else {
-        let status_line = "HTTP/1.1 404 NOT FOUND";
-        let contents = fs::read_to_string("404.html").unwrap();
-
-        let response = format!(
-            "{}\r\nContent-Length: {}\r\n\r\n{}",
-            status_line,
-            contents.len(),
-            contents
-        );
-
-        stream.write(response.as_bytes()).unwrap();
-        stream.flush().unwrap();
-    }
+        } else if input.starts_with("p"){
+            let mut input = input.trim(); //removes \n from read_line
+            let input_vector: Vec<String> = input.split(' ').map(|s| s.to_string()).collect(); // creates a vector from args
+            println!("vector: {:?}", input_vector);
+            preforked::init(input_vector);
+            // preforked-WebServer -n cantidad -w http-root -p port
+        } else if input.starts_with("HTTPclient"){
+            // code for HTTP client
+        } else if input.starts_with("stress"){
+            // code for stress cmd
+        } else if input.starts_with("exit"){
+            //break;
+        } else {
+            println!("Invalid command");
+        }
+    //}
 }

@@ -1,3 +1,4 @@
+extern crate ftp;
 use std::io::prelude::*;
 use std::net::TcpListener;
 use std::net::TcpStream;
@@ -5,6 +6,7 @@ use std::fs;
 use std::time::Duration;
 use web_server::ThreadPool;
 use std::thread;
+use ftp::FtpStream;
 
 pub fn init(args: Vec<String>) {
     let mut max = args.len() - 1;
@@ -38,8 +40,11 @@ pub fn init(args: Vec<String>) {
 fn server_init(root: &str, port: &str, n: usize) {
     let http_url = format!("{}:{}", root, port);
     println!("{}", http_url);
-
+    //let mut ftp_stream = FtpStream::connect(http_url).unwrap_or_else(|err|
+    //    panic!("{}", err)
+    //);
     let listener = TcpListener::bind(http_url).unwrap();        // returns a new tcp listener, returns Result<T, E>
+
     let pool = ThreadPool::new(n);
 
     for stream in listener.incoming() {

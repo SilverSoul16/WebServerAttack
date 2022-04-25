@@ -1,5 +1,4 @@
 mod prethread;
-mod http_client;
 
 fn main() {
     loop {

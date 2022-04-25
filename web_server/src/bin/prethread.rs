@@ -50,6 +50,7 @@ fn server_init(root: &str, port: &str, n: usize) {
     for stream in listener.incoming() {
         let stream = stream.unwrap();
 
+        //sends each request to a different thread
         pool.execute(|| {
             handle_requests(stream);
         });

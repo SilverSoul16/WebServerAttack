@@ -3,6 +3,7 @@ use std::sync::mpsc;
 use std::sync::Arc;
 use std::sync::Mutex;
 
+//declaration of the thread pool structure
 pub struct ThreadPool {
     workers: Vec<Worker>,
     sender: mpsc::Sender<Job>,
@@ -15,12 +16,12 @@ impl ThreadPool {
         let (sender, receiver) = mpsc::channel();
         let receiver = Arc::new(Mutex::new(receiver));
         let mut workers = Vec::with_capacity(size);
-        for id in 0..size {
+        for id in 0..size { //creates the amount of threads required, runs a thread when receiving a request
             workers.push(Worker::new(id, Arc::clone(&receiver)));
         }
         ThreadPool{workers, sender}
     }
-
+    // executes the request in a current working thread
     pub fn execute<F>(&self, f: F)
     where
         F: FnOnce() + Send + 'static,
@@ -34,6 +35,7 @@ struct Worker {
     thread: thread::JoinHandle<()>,
 }
 
+//sends the code from the threadpool to a thread
 impl Worker {
     fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
         let thread = thread::spawn(move || loop {

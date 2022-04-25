@@ -16,7 +16,7 @@ impl ThreadPool {
         let (sender, receiver) = mpsc::channel();
         let receiver = Arc::new(Mutex::new(receiver));
         let mut workers = Vec::with_capacity(size);
-        for id in 0..size { //creates the amount of threads required, runs a thread when receiving a request
+        for id in 0..size { //creates the amount of threads required
             workers.push(Worker::new(id, Arc::clone(&receiver)));
         }
         ThreadPool{workers, sender}
@@ -27,6 +27,7 @@ impl ThreadPool {
         F: FnOnce() + Send + 'static,
     {
         let job = Box::new(f);
+
         self.sender.send(job).unwrap();
     }
 }

@@ -9,7 +9,7 @@ fn main() {
             input = input.trim().to_string(); //removes \n from read_line
             let input_vector: Vec<String> = input.split(' ').map(|s| s.to_string()).collect(); // creates a vector from args
             prethread::init(input_vector);
-            // preforked-WebServer -n cantidad -w http-root -p port
+            // prethread-WebServer -n cantidad -w http-root -p port
         } else if input.starts_with("preforked-WebServer"){
             // code for preforked
             // preforked-WebServer -n cantidad -w http-root -p port
@@ -20,11 +20,13 @@ fn main() {
             // HTTPCLient -h <host a conextar> [lista de comandos a ejecutar]
         } else if input.starts_with("stress"){
             input = input.trim().to_string(); //removes \n from read_line
+
             while true {
                 let input_vector: Vec<String> = input.split(' ').map(|s| s.to_string()).collect(); // creates a vector from args
                 prethread::client_init(input_vector);
             }
-            //stress -h <host a conextar> [lista de comandos a ejecutar]
+            
+            //stress [lista de comandos a ejecutar]
         } else if input.starts_with("exit"){
             //break;
         } else {

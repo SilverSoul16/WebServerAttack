@@ -1,5 +1,6 @@
 mod prethread;
 mod http_client;
+use std::process::Command;
 
 fn main() {
     //while true {
@@ -22,7 +23,9 @@ fn main() {
             http_client::init(input_vector);
             // HTTPCLient -h <host a conextar> [lista de comandos a ejecutar]
         } else if input.starts_with("stress"){
-            // code for stress cmd
+            Command::new("stress.py")
+            .output();
+            //.expect("failed to execute process");
         } else if input.starts_with("exit"){
             //break;
         } else {

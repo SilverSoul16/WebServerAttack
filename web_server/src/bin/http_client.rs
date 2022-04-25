@@ -3,6 +3,7 @@ pub fn init(args: Vec<String>) {
     let mut max = args.len() - 1;
     let mut counter = 1;
     let mut host_to_connect: &str = "localhost:7878/";
+    //let mut stream = TcpStream::connect(host_to_connect).expect("Could not connect to server."); //supposely communicates with the tcp stream
 
     while max > 0 {
         let flag = &args[counter];
@@ -10,6 +11,8 @@ pub fn init(args: Vec<String>) {
         
         if flag == "-h" {
             host_to_connect = flag_value;
+            //stream = TcpStream::connect(host_to_connect).expect("Could not connect to server.");
+            // se hace un stream.write para escribir al tcp stream.
         } else if flag.starts_with("["){
             let comm_list = &args[counter..];
             validate_commands(comm_list.to_vec());
@@ -34,6 +37,20 @@ fn validate_commands(commands: Vec<String>) {
     while max > 0 {
         let method = &commands[counter].trim_start_matches("[");
         let data = &commands[counter + 1];
+        
+        /* standard GET
+        curl url
+        or
+        curl url -X GET
+
+        to download file:
+        curl localhost:7878/file.txt
+
+        to post it
+        curl -F 'data=@path' uploadURL  //no funciona?
+        curl localhost:7878/ -H "Content-Type: document" --data-binary "@/bin/zip"
+        home/gio/Documents/WebServerAttack/web_server/test.txt
+        */
         
         if *method == "POST" {
             println!("POST METHOD: {}", method);

@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 ftp = { version = "1.0"}
+serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
